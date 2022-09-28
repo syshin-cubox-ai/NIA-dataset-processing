@@ -71,9 +71,7 @@ if __name__ == '__main__':
                 righthand_bbox = list(o['annotation.human.bbox.righthand'].values())
 
         annotation_human = {
-            'segmentation': [
-                human_segmentation
-            ],
+            'segmentation': human_segmentation,
             'area': human_bbox[2] * human_bbox[3],
             'iscrowd': 0,
             'image_id': idx,

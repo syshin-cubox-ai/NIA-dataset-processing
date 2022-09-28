@@ -1,5 +1,5 @@
-import os
 import glob
+import os
 import shutil
 
 indoor_img_path = 'D:/data/NIA_2022_1/122-1.다중객체3차원표현데이터(실내)/01.원천데이터'
@@ -7,10 +7,14 @@ indoor_label_path = 'D:/data/NIA_2022_1/122-1.다중객체3차원표현데이터
 outdoor_img_path = 'D:/data/NIA_2022_1/122-2.다중객체3차원표현데이터(실외)/01.원천데이터'
 outdoor_label_path = 'D:/data/NIA_2022_1/122-2.다중객체3차원표현데이터(실외)/02.라벨링데이터(2D)'
 
-indoor_img = [i.replace('.JPG', '.jpg') for i in glob.glob(os.path.join(indoor_img_path, '**'), recursive=True) if os.path.splitext(i)[1] == '.JPG']
-indoor_label = [i for i in glob.glob(os.path.join(indoor_label_path, '**'), recursive=True) if os.path.splitext(i)[1] == '.json']
-outdoor_img = [i.replace('.JPG', '.jpg') for i in glob.glob(os.path.join(outdoor_img_path, '**'), recursive=True) if os.path.splitext(i)[1] == '.JPG']
-outdoor_label = [i for i in glob.glob(os.path.join(outdoor_label_path, '**'), recursive=True) if os.path.splitext(i)[1] == '.json']
+indoor_img = [i.replace('.JPG', '.jpg') for i in glob.glob(os.path.join(indoor_img_path, '**'), recursive=True) if
+              os.path.splitext(i)[1] == '.JPG']
+indoor_label = [i for i in glob.glob(os.path.join(indoor_label_path, '**'), recursive=True) if
+                os.path.splitext(i)[1] == '.json']
+outdoor_img = [i.replace('.JPG', '.jpg') for i in glob.glob(os.path.join(outdoor_img_path, '**'), recursive=True) if
+               os.path.splitext(i)[1] == '.JPG']
+outdoor_label = [i for i in glob.glob(os.path.join(outdoor_label_path, '**'), recursive=True) if
+                 os.path.splitext(i)[1] == '.json']
 
 indoor_img_path_temp = os.path.join(indoor_img_path, 'temp')
 outdoor_img_path_temp = os.path.join(outdoor_img_path, 'temp')

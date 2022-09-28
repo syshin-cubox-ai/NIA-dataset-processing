@@ -1,33 +1,32 @@
 import collections
 import datetime
 import glob
-import os
 import json
+import os
 
 import numpy as np
 
 DATA_ROOT = 'D:/data/nia/indoor'
 
+coco_format_json = collections.OrderedDict(
+    {
+        'info': {
+            'date_created': datetime.datetime.now().strftime('%Y/%m/%d'),
+            'description': 'NIA4-1 Dataset',
+            'version': '1.0',
+            'year': datetime.date.today().year,
+        },
+        'images': [],
+        'annotations': [],
+        'categories': [
+            {'id': 1, 'name': 'human'},
+            {'id': 2, 'name': 'lefthand'},
+            {'id': 3, 'name': 'righthand'},
+        ],
+    }
+)
 
 if __name__ == '__main__':
-    coco_format_json = collections.OrderedDict(
-        {
-            'info': {
-                'date_created': datetime.datetime.now().strftime('%Y/%m/%d'),
-                'description': 'NIA4-1 Dataset',
-                'version': '1.0',
-                'year': datetime.date.today().year,
-            },
-            'images': [],
-            'annotations': [],
-            'categories': [
-                {'id': 1, 'name': 'human'},
-                {'id': 2, 'name': 'lefthand'},
-                {'id': 3, 'name': 'righthand'},
-            ],
-        }
-    )
-
     indoor_label_paths = sorted(glob.glob(os.path.join(DATA_ROOT, '*.json')))
     for idx, indoor_label_path in enumerate(indoor_label_paths):
         with open(indoor_label_path, 'r', encoding='utf-8') as f:

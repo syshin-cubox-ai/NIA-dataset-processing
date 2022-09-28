@@ -1,7 +1,7 @@
 import collections
-import os
-import json
 import copy
+import json
+import os
 
 input_json_path = 'D:/data/nia/indoor_trainval.json'
 

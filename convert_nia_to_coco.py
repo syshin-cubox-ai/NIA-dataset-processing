@@ -59,8 +59,6 @@ if __name__ == '__main__':
                 human_bbox = list(o['annotation.human.bbox.2d'].values())
             elif list(o.keys())[0] == 'annotation.human.segmentation':
                 assert human_segmentation is None
-                if len(o['annotation.human.segmentation'][0]) != 1:
-                    print()
                 human_segmentation = []
                 for polygon in o['annotation.human.segmentation'][0]:
                     human_segmentation.append(np.array([list(i.values()) for i in polygon]).flatten().tolist())

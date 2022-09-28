@@ -99,6 +99,5 @@ if __name__ == '__main__':
         }
         coco_format_json['annotations'].append(annotation_righthand)
 
-    a = os.path.dirname(DATA_ROOT)
     with open(os.path.join(os.path.dirname(DATA_ROOT), 'indoor_trainval.json'), 'w', encoding='utf-8') as f:
         json.dump(coco_format_json, f)

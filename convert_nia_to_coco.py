@@ -4,16 +4,9 @@ import glob
 import os
 import json
 
-with open('D:/data/indoor/coco.json', 'r', encoding='utf-8') as f:
-    coco = json.load(f)
+import numpy as np
 
-with open('D:/data/indoor/nia.json', 'r', encoding='utf-8') as f:
-    nia = json.load(f)
-
-with open('D:/data/debug.json', 'r', encoding='utf-8') as f:
-    a = json.load(f)
-
-convert_json = collections.OrderedDict(
+coco_format_json = collections.OrderedDict(
     {
         'info': {
             'date_created': datetime.datetime.now().strftime('%Y/%m/%d'),
@@ -23,41 +16,88 @@ convert_json = collections.OrderedDict(
         },
         'images': [],
         'annotations': [],
-        'categories': [],
+        'categories': [
+            {'id': 1, 'name': 'human'},
+            {'id': 2, 'name': 'lefthand'},
+            {'id': 3, 'name': 'righthand'},
+        ],
     }
 )
 
-# 예시
-image = {
-    'file_name': 'COCO_val2014_000000001268.jpg',
-    'height': 427,
-    'width': 640,
-    'id': 1268  # image마다 id 설정
-}
-annotation = {
-    'segmentation': [
-        [
-            192.81,
-            247.09,
-            219.03,
-            249.06
-        ]
-    ],
-    'area': 1035.749,
-    'iscrowd': 0,
-    'image_id': 1268,  # image의 id를 연결
-    'bbox': [  # upper-left x,y and wh
-        192.81,
-        224.8,
-        74.73,
-        33.43
-    ],
-    'category_id': 0,  # category의 id를 연결
-    'id': 42986  # annotation마다 id 설정
-}
-category = {
-    'id': 0,  # category마다 id 설정
-    'name': 'person',
-}
+indoor_label_paths = sorted(glob.glob('D:/data/nia/indoor/*.json'))
+for idx, indoor_label_path in enumerate(indoor_label_paths):
+    with open(indoor_label_path, 'r', encoding='utf-8') as f:
+        label = json.load(f)
+        label = collections.OrderedDict(sorted(label.items(), key=lambda t: t[0]))
+    try:
+        image = {
+            'file_name': label['info.image.id'],
+            'height': int(label['info.image.height']),
+            'width': int(label['info.image.width']),
+            'id': idx
+        }
+    except KeyError:
+        image = {
+            'file_name': label['meta']['info.image.id'],
+            'height': int(label['meta']['info.image.height']),
+            'width': int(label['meta']['info.image.width']),
+            'id': idx
+        }
+    coco_format_json['images'].append(image)
 
-exit()
+    human_bbox = None
+    human_segmentation = None
+    lefthand_bbox = None
+    righthand_bbox = None
+    for o in label['objects']:
+        if list(o.keys())[0] == 'annotation.human.bbox.2d':
+            assert human_bbox is None
+            human_bbox = list(o['annotation.human.bbox.2d'].values())
+        elif list(o.keys())[0] == 'annotation.human.segmentation':
+            assert human_segmentation is None
+            if len(o['annotation.human.segmentation'][0]) != 1:
+                print()
+            human_segmentation = []
+            for polygon in o['annotation.human.segmentation'][0]:
+                human_segmentation.append(np.array([list(i.values()) for i in polygon]).flatten().tolist())
+
+        elif list(o.keys())[0] == 'annotation.human.bbox.lefthand':
+            assert lefthand_bbox is None
+            lefthand_bbox = list(o['annotation.human.bbox.lefthand'].values())
+        elif list(o.keys())[0] == 'annotation.human.bbox.righthand':
+            assert righthand_bbox is None
+            righthand_bbox = list(o['annotation.human.bbox.righthand'].values())
+
+    annotation_human = {
+        'segmentation': [
+            human_segmentation
+        ],
+        'area': human_bbox[2] * human_bbox[3],
+        'iscrowd': 0,
+        'image_id': idx,
+        'bbox': human_bbox,
+        'category_id': 1,
+        'id': len(coco_format_json['annotations'])
+    }
+    coco_format_json['annotations'].append(annotation_human)
+    annotation_lefthand = {
+        'area': lefthand_bbox[2] * lefthand_bbox[3],
+        'iscrowd': 0,
+        'image_id': idx,
+        'bbox': lefthand_bbox,
+        'category_id': 2,
+        'id': len(coco_format_json['annotations'])
+    }
+    coco_format_json['annotations'].append(annotation_lefthand)
+    annotation_righthand = {
+        'area': righthand_bbox[2] * righthand_bbox[3],
+        'iscrowd': 0,
+        'image_id': idx,
+        'bbox': righthand_bbox,
+        'category_id': 3,
+        'id': len(coco_format_json['annotations'])
+    }
+    coco_format_json['annotations'].append(annotation_righthand)
+
+with open('D:/data/nia/indoor_trainval.json', 'w', encoding='utf-8') as f:
+    json.dump(coco_format_json, f)

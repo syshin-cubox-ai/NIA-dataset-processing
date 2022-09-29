@@ -112,5 +112,7 @@ if __name__ == '__main__':
         }
         coco_format_json['annotations'].append(annotation_righthand)
 
-    with open(os.path.join(os.path.dirname(DATA_ROOT), TYPE + '_trainval.json'), 'w', encoding='utf-8') as f:
+    output_path = os.path.join(os.path.dirname(DATA_ROOT), 'annotations')
+    os.makedirs(output_path, exist_ok=True)
+    with open(os.path.join(output_path, TYPE + '_trainval.json'), 'w', encoding='utf-8') as f:
         json.dump(coco_format_json, f)

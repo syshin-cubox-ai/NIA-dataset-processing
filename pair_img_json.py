@@ -41,6 +41,7 @@ for img in outdoor_img:
     shutil.copy(img, outdoor_img_path_temp)
 for label in outdoor_label:
     shutil.copy(label, outdoor_label_path_temp)
+print('Complete copying original files.')
 
 # 이미지, 라벨 쌍 맞추기
 indoor_output_path = 'D:/data/nia/indoor'

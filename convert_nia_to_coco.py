@@ -6,7 +6,8 @@ import os
 
 import numpy as np
 
-DATA_ROOT = 'D:/data/nia/indoor'
+TYPE = 'indoor'
+DATA_ROOT = 'D:/data/nia/' + TYPE
 
 coco_format_json = collections.OrderedDict(
     {
@@ -27,9 +28,9 @@ coco_format_json = collections.OrderedDict(
 )
 
 if __name__ == '__main__':
-    indoor_label_paths = sorted(glob.glob(os.path.join(DATA_ROOT, '*.json')))
-    for idx, indoor_label_path in enumerate(indoor_label_paths):
-        with open(indoor_label_path, 'r', encoding='utf-8') as f:
+    label_paths = sorted(glob.glob(os.path.join(DATA_ROOT, '*.json')))
+    for idx, label_path in enumerate(label_paths):
+        with open(label_path, 'r', encoding='utf-8') as f:
             label = json.load(f)
             label = collections.OrderedDict(sorted(label.items(), key=lambda t: t[0]))
         try:
@@ -98,5 +99,5 @@ if __name__ == '__main__':
         }
         coco_format_json['annotations'].append(annotation_righthand)
 
-    with open(os.path.join(os.path.dirname(DATA_ROOT), 'indoor_trainval.json'), 'w', encoding='utf-8') as f:
+    with open(os.path.join(os.path.dirname(DATA_ROOT), TYPE + '_trainval.json'), 'w', encoding='utf-8') as f:
         json.dump(coco_format_json, f)

@@ -9,11 +9,11 @@ outdoor_label_path = 'D:/data/NIA_original/122-2.다중객체3차원표현데이
 
 indoor_img = [i for i in glob.glob(os.path.join(indoor_img_path, '**'), recursive=True) if
               os.path.splitext(i)[1] == '.JPG']
-indoor_label = [i for i in glob.glob(os.path.join(indoor_label_path, '20220928', '**'), recursive=True) if
+indoor_label = [i for i in glob.glob(os.path.join(indoor_label_path, '20220929', '**'), recursive=True) if
                 os.path.splitext(i)[1] == '.json']
 outdoor_img = [i for i in glob.glob(os.path.join(outdoor_img_path, '**'), recursive=True) if
                os.path.splitext(i)[1] == '.JPG']
-outdoor_label = [i for i in glob.glob(os.path.join(outdoor_label_path, '20220928', '**'), recursive=True) if
+outdoor_label = [i for i in glob.glob(os.path.join(outdoor_label_path, '20220929', '**'), recursive=True) if
                  os.path.splitext(i)[1] == '.json']
 print(f'indoor_img: {len(indoor_img)}')
 print(f'indoor_label: {len(indoor_label)}')

@@ -4,7 +4,9 @@ import glob
 import json
 import os
 
+import cv2
 import numpy as np
+import tqdm
 
 TYPE = 'indoor'
 DATA_ROOT = 'D:/data/nia/' + TYPE
@@ -29,10 +31,20 @@ coco_format_json = collections.OrderedDict(
 
 if __name__ == '__main__':
     label_paths = sorted(glob.glob(os.path.join(DATA_ROOT, '*.json')))
-    for idx, label_path in enumerate(label_paths):
+    for idx, label_path in enumerate(tqdm.tqdm(label_paths, 'Convert format')):
         with open(label_path, 'r', encoding='utf-8') as f:
             label = json.load(f)
             label = collections.OrderedDict(sorted(label.items(), key=lambda t: t[0]))
+
+        img = cv2.imread(os.path.join(DATA_ROOT, label['info.image.id']))
+        image = {
+            'file_name': label['info.image.id'],
+            'height': img.shape[0],
+            'width': img.shape[1],
+            'id': idx
+        }
+
+        """
         try:
             image = {
                 'file_name': label['info.image.id'],
@@ -47,6 +59,7 @@ if __name__ == '__main__':
                 'width': int(label['meta']['info.image.width']),
                 'id': idx
             }
+        """
         coco_format_json['images'].append(image)
 
         human_bbox = None
